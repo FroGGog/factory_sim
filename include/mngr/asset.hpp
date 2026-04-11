@@ -1,5 +1,5 @@
-#ifndef MNGR_RESOURCE_HPP
-#define MNGR_RESOURCE_HPP
+#ifndef MNGR_ASSET_HPP
+#define MNGR_ASSET_HPP
 
 #include <raylib.h>
 #include <string>
