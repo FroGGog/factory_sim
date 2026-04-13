@@ -21,3 +21,10 @@ else()
       INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/lib)
    target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 endif()
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/assets
+        ${CMAKE_BINARY_DIR}/assets
+    COMMENT "Copying assets to build directory"
+)
