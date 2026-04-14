@@ -1,5 +1,5 @@
 #pragma once
-#include "util/draw.hpp"
+#include <raylib.h>
 #include <vector>
 
 /// @brief 1) m_x - x size of grid; 2) m_y - y size of grid; 3) m_cellSize - size of one cell in grid
