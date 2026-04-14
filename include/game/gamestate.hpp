@@ -17,6 +17,8 @@ public:
 
     void render();
 
+    std::vector<std::vector<Rectangle>>& getGrid();
+
 private:
 
     std::vector<std::vector<Rectangle>> m_grid;
@@ -31,6 +33,8 @@ struct MainGameState: public State
 public:
    MainGameState(const GridSettings& gr_settings);
    ~MainGameState() = default;
+
+    void sHandleEvents();
 
    void update() override;
    void fixedUpdate() override;

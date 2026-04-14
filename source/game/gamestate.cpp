@@ -1,4 +1,5 @@
 #include "game/gamestate.hpp"
+#include <iostream>
 
 // MainGameState 
 MainGameState::MainGameState(const GridSettings& gr_settings)
@@ -8,8 +9,30 @@ MainGameState::MainGameState(const GridSettings& gr_settings)
 
 void MainGameState::update()
 {
-
+    sHandleEvents();
 }
+
+void MainGameState::sHandleEvents()
+{
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        Rectangle mouseRec = Rectangle{GetMousePosition().x, GetMousePosition().y, 3.f, 3.f};
+        for(const auto& row : m_grid->getGrid())
+        {
+            for(const auto& rec : row)
+            {
+                if(CheckCollisionRecs(rec,  mouseRec))
+                {
+                    // do collision click there
+                    return;
+                }
+            }
+        }
+        
+        std::cout << "Clicked";
+    }
+}
+
 
 void MainGameState::fixedUpdate()
 {
@@ -27,7 +50,6 @@ State *MainGameState::change()
 }
 
 // Grid class
-
 Grid::Grid(const GridSettings& settings)
 {
     m_collumns = static_cast<int>(settings.m_x / settings.m_cellSize);
@@ -57,4 +79,9 @@ void Grid::render()
             DrawRectangleLinesEx(col, 1.5f, WHITE);
         }
     }
+}
+
+std::vector<std::vector<Rectangle>> &Grid::getGrid()
+{
+    return m_grid;
 }
