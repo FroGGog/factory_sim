@@ -30,4 +30,5 @@ struct LoadingState: public State {
    float iconRotation = 0.0f;
 };
 
+
 #endif

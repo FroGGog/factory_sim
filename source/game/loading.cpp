@@ -2,7 +2,8 @@
 #include "mngr/asset.hpp"
 #include "mngr/sound.hpp"
 #include "util/draw.hpp"
-
+#include "game/loading.hpp"
+#include "game/gamestate.hpp"
 // Constructors
 
 LoadingState::LoadingState() {
@@ -60,5 +61,7 @@ void LoadingState::render() {
 }
 
 State *LoadingState::change() {
-   return nullptr;
+   // add check if games is ready and etc 
+   MainGameState* state = new MainGameState(GridSettings{1080, 1024, 64});
+   return state;
 }
