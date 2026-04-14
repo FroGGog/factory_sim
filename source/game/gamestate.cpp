@@ -5,6 +5,11 @@
 MainGameState::MainGameState(const GridSettings& gr_settings)
 {
     m_grid = std::make_unique<Grid>(gr_settings);
+
+    m_camera.target = {0, 0};
+    m_camera.offset = {0, 0};
+    m_camera.zoom = 1.f;
+    m_camera.rotation = 0.f;
 }
 
 void MainGameState::update()
@@ -29,6 +34,23 @@ void MainGameState::sHandleEvents()
             }
         }
     }
+    if(IsKeyDown(KEY_D))
+    {
+        m_camera.target.x += m_camera_speed * GetFrameTime();
+    }
+    if(IsKeyDown(KEY_A))
+    {
+        m_camera.target.x -= m_camera_speed * GetFrameTime();
+    }
+    if(IsKeyDown(KEY_W))
+    {
+        m_camera.target.y -= m_camera_speed * GetFrameTime();
+    }
+    if(IsKeyDown(KEY_S))
+    {
+        m_camera.target.y += m_camera_speed * GetFrameTime();
+    }
+    
 }
 
 
@@ -39,7 +61,9 @@ void MainGameState::fixedUpdate()
 
 void MainGameState::render()
 {
+    BeginMode2D(m_camera);
     m_grid->render();
+    EndMode2D();
 }
 
 State *MainGameState::change()
