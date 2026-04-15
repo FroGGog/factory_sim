@@ -22,9 +22,9 @@ void MainGameState::sHandleEvents()
         Rectangle mouseRec = Rectangle{GetMousePosition().x, GetMousePosition().y, 3.f, 3.f};
         for(const auto& row : m_grid.getGrid())
         {
-            for(const auto& rec : row)
+            for(const auto& cell : row)
             {
-                if(CheckCollisionRecs(rec,  mouseRec))
+                if(CheckCollisionRecs(cell.m_bounds,  mouseRec))
                 {
                     // do collision click there
                     return;
@@ -48,7 +48,6 @@ void MainGameState::sHandleEvents()
     {
         m_camera.target.y += m_camera_speed * GetFrameTime();
     }
-    
 }
 
 
