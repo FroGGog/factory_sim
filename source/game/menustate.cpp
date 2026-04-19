@@ -1,6 +1,7 @@
 #include "game/menustate.hpp"
 #include "game/gamestate.hpp"
 #include "mngr/asset.hpp"
+#include "util/draw.hpp"
 #include <cmath>
 
 // Constructor
@@ -16,6 +17,24 @@ MenuState::MenuState() {
 // Update
 
 void MenuState::update() {
+   // temporary for now
+   if (!IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+      return;
+   }
+   
+   Font &font = getFont("sekuya");
+   Rectangle playRect = getRectangle({20.0f, 150.0f}, MeasureTextEx(font, "play", 50.0f, 1.0f));
+   Rectangle quitRect = getRectangle({20.0f, 220.0f}, MeasureTextEx(font, "quit", 50.0f, 1.0f));
+   Vector2 mouse = GetMousePosition();
+
+   if (CheckCollisionPointRec(mouse, playRect)) {
+      playingALevel = true;
+      quitState = true;
+   }
+
+   if (CheckCollisionPointRec(mouse, quitRect)) {
+      quitState = true;
+   }
    // UpdateCamera(&camera, CAMERA_FREE);
 }
 
@@ -34,7 +53,9 @@ void MenuState::render() {
    EndMode3D();
 
    Font &font = getFont("sekuya");
-   DrawTextPro(font, "FACTORY SIM", {20.0f, 20.0f}, {0, 0}, 0, 120.0f, 1.0f, RED);
+   DrawTextPro(font, "factory sim", {20.0f, 20.0f}, {0, 0}, 0, 120.0f, 1.0f, RED);
+   DrawTextPro(font, "play", {20.0f, 150.0f}, {0, 0}, 0, 50.0f, 1.0f, RED);
+   DrawTextPro(font, "quit", {20.0f, 220.0f}, {0, 0}, 0, 50.0f, 1.0f, RED);
 }
 
 // Change
