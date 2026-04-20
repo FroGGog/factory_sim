@@ -1,6 +1,14 @@
 #pragma once
 #include "game/state.hpp"
 #include <raylib.h>
+#include <vector>
+
+struct Star {
+   Vector3 pos;
+   Color color;
+   float radius;
+   float twinkleOffset;
+};
 
 struct MenuState: public State {
    enum class Phase {title, levelSelection};
@@ -16,6 +24,7 @@ struct MenuState: public State {
 
    // Members
 
+   std::vector<Star> stars;
    Camera3D camera;
 
    Phase phase = Phase::title;

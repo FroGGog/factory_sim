@@ -2,6 +2,7 @@
 #define UTIL_RANDOM_HPP
 
 #include <cstdlib>
+#include <raylib.h>
 #include <vector>
 
 // Random functions
@@ -16,6 +17,15 @@ inline float randomFloat(float min, float max) {
 
 inline bool chance(int percent) {
    return randomInt(0, 100) <= percent;
+}
+
+inline Color randomColor(unsigned char min, unsigned char max) {
+   return {
+      (unsigned char)randomInt(min, max),
+      (unsigned char)randomInt(min, max),
+      (unsigned char)randomInt(min, max),
+      255
+   };
 }
 
 // Random vector access functions
