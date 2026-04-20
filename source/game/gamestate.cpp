@@ -19,18 +19,7 @@ void MainGameState::sHandleEvents()
 {
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
-        Rectangle mouseRec = Rectangle{GetMousePosition().x, GetMousePosition().y, 3.f, 3.f};
-        for(const auto& row : m_grid.getGrid())
-        {
-            for(const auto& cell : row)
-            {
-                if(CheckCollisionRecs(cell.m_bounds,  mouseRec))
-                {
-                    // do collision click there
-                    return;
-                }
-            }
-        }
+        
     }
     if(IsKeyDown(KEY_D))
     {
