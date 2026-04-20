@@ -3,13 +3,26 @@
 
 #include <raylib.h>
 
+// Responsive design functions
+
+float getWidthRatio();
+float getHeightRatio();
+float getCubicRatio();
+float getFontSize(float size);
+
+void drawTextResponsiveCentered(const Font &font, float screenWidthRatio, float screenHeightRatio, const char *text, float fontSize, Color color);
+void drawTextResponsive(const Font &font, float screenWidthRatio, float screenHeightRatio, const char *text, float fontSize, Color color);
+
 // Helper functions
 
 Vector2 getScreenSize();
 Vector2 getScreenCenter();
 Vector2 getCenterOffset(const Vector2 &offset);
 
-Vector2 getTextOrigin(const Font &font, const char *text, float fontSize);
+Vector2 getResponsivePos(float screenWidthRatio, float screenHeightRatio);
+Rectangle getResponsiveTextRectangle(float screenWidthRatio, float screenHeightRatio, const Font &font, const char *text, float fontSize);
+
+Vector2 getTextOrigin(const Font &font, const char *text, float fontSize, float spacing);
 Vector2 getOrigin(const Vector2 &size);
 
 Rectangle getBox(const Texture &texture);

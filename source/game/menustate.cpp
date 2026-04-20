@@ -4,6 +4,14 @@
 #include "util/draw.hpp"
 #include <cmath>
 
+// Constants
+
+constexpr Vector2 titlePosRatio = {0.05f, 0.05f};
+constexpr Vector2 playButtonPosRatio = {0.05f, 0.2f};
+constexpr Vector2 quitButtonPosRatio = {0.05f, 0.3f};
+constexpr float fontDefault = 50;
+constexpr float fontTitle = 120;
+
 // Constructor
 
 MenuState::MenuState() {
@@ -23,8 +31,8 @@ void MenuState::update() {
    }
    
    Font &font = getFont("sekuya");
-   Rectangle playRect = getRectangle({20.0f, 150.0f}, MeasureTextEx(font, "play", 50.0f, 1.0f));
-   Rectangle quitRect = getRectangle({20.0f, 220.0f}, MeasureTextEx(font, "quit", 50.0f, 1.0f));
+   Rectangle playRect = getResponsiveTextRectangle(playButtonPosRatio.x, playButtonPosRatio.y, font, "play", fontDefault);
+   Rectangle quitRect = getResponsiveTextRectangle(quitButtonPosRatio.x, quitButtonPosRatio.y, font, "quit", fontDefault);
    Vector2 mouse = GetMousePosition();
 
    if (CheckCollisionPointRec(mouse, playRect)) {
@@ -53,9 +61,9 @@ void MenuState::render() {
    EndMode3D();
 
    Font &font = getFont("sekuya");
-   DrawTextPro(font, "factory sim", {20.0f, 20.0f}, {0, 0}, 0, 120.0f, 1.0f, RED);
-   DrawTextPro(font, "play", {20.0f, 150.0f}, {0, 0}, 0, 50.0f, 1.0f, RED);
-   DrawTextPro(font, "quit", {20.0f, 220.0f}, {0, 0}, 0, 50.0f, 1.0f, RED);
+   drawTextResponsive(font, titlePosRatio.x, titlePosRatio.y, "factory sim", fontTitle, RED);
+   drawTextResponsive(font, playButtonPosRatio.x, playButtonPosRatio.y, "play", fontDefault, RED);
+   drawTextResponsive(font, quitButtonPosRatio.x, quitButtonPosRatio.y, "quit", fontDefault, RED);
 }
 
 // Change
