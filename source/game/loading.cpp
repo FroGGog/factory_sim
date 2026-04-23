@@ -62,6 +62,6 @@ void LoadingState::render() {
 
 State *LoadingState::change() {
    // add check if games is ready and etc 
-   MainGameState* state = new MainGameState(GridSettings{5000, 5000, 64});
+   MainGameState* state = new MainGameState(GridSettings{1500, 1500, 64});
    return state;
 }

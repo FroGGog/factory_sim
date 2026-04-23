@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <vector>
 #include <random>
+#include <iostream>
 
 #include "../include/util/draw.hpp"
 #include "../include/mngr/asset.hpp"
@@ -48,10 +49,12 @@ private:
 
     std::vector<std::vector<Tile>> m_tiles;
     std::vector<Entity> m_entities;
-    Texture2D m_small_texture;
+    Texture2D& m_small_texture;
     Texture2D m_big_texture;
 
     int m_rows, m_collumns;
 
     bool canPlaceEntity();
+
+    const Entity& getEntity(size_t id);
 };
