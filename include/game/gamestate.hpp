@@ -1,6 +1,7 @@
 #pragma once
 #include "game/state.hpp"
 #include "game/grid.hpp"
+#include <iostream>
 
 // TODO: after all we will use this class for world generation and other stuff
 struct MainGameState: public State
@@ -22,6 +23,7 @@ private:
     Grid m_grid;
 
     Camera2D m_camera;
+    GridSettings m_settings;
     float m_camera_speed = 100.f;
 
 };
