@@ -37,7 +37,7 @@ void Unit::updateBotMovement() {
 // render units
 
 void Unit::render() {
-   drawTexture(c_texture, m_position, c_size);
+   drawTexture(c_texture, m_position, c_size, WHITE);
 }
 
 void Unit::setWhetherThePlayerIsControlling(bool isControlling) {

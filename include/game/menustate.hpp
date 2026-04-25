@@ -1,6 +1,6 @@
 #pragma once
 #include "game/state.hpp"
-#include <raylib.h>
+#include "util/draw.hpp"
 #include <vector>
 
 struct Star {
@@ -23,6 +23,8 @@ struct MenuState: public State {
    State *change() override;
 
    // Members
+
+   Button playButton, quitButton;
 
    std::vector<Star> stars;
    Camera3D camera;
