@@ -4,3 +4,4 @@
 /.vscode
 /.clangd
 /lib
+.DS_Store

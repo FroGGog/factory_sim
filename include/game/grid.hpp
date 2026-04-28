@@ -1,13 +1,42 @@
 #pragma once
 #include <raylib.h>
 #include <vector>
+#include <random>
+#include <iostream>
+#include <span>
+
+#include "../include/util/draw.hpp"
+#include "../include/mngr/asset.hpp"
+
+enum class TileType {NONE, ROOT, GHOST};
+
+
+struct Entity
+{
+    Entity();
+
+    static size_t m_global_id;
+    size_t m_id;
+    Vector2 m_size;
+    Texture m_texture;
+    Rectangle m_colliderbox;
+};
+
+/// @brief by default tile type is NONE 
+struct Tile
+{
+    TileType type = TileType::NONE;
+    size_t entity_id;
+    std::optional<Vector2> root_pos;
+    Rectangle m_colliderbox;
+};
 
 /// @brief 1) m_x - x size of grid; 2) m_y - y size of grid; 3) m_cellSize - size of one cell in grid
 struct GridSettings
 {
     int m_x;
     int m_y;
-    int m_cellSize;
+    int m_tileSize;
 };
 
 class Grid 
@@ -17,11 +46,27 @@ public:
 
     void render();
 
-    std::vector<std::vector<Rectangle>>& getGrid();
+    Entity* getEntity(size_t id);
+    size_t getEntityIdAt(int x, int y);
+
+    std::span<Entity> getEntities();
+    const std::vector<std::vector<Tile>>& getTiles();
+
+    size_t getRowCount();
+    size_t getCollumnCount();
+
+    void placeEntity(int x, int y, Entity ent);
+    void removeEntity(int x, int y);
+    void removeLastAddedEntity();
 
 private:
 
-    std::vector<std::vector<Rectangle>> m_grid;
+    std::vector<std::vector<Tile>> m_tiles;
+    std::vector<Entity> m_entities;
 
-    int m_rows, m_collumns;
+    int m_rows, m_collumns, m_tile_size;
+
+    bool canPlaceEntity(int x, int y, int width, int height);
+
+    void resetTileArea(Vector2 ent_pos);
 };
