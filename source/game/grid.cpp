@@ -50,7 +50,7 @@ void Grid::render()
                 const Entity& ent = *getEntity(tile.entity_id);
                 Vector2 pos = { tile.m_colliderbox.x, tile.m_colliderbox.y };
                 drawTexture(ent.m_texture, Vector2{pos}, Vector2{static_cast<float>(ent.m_texture.width),
-                    static_cast<float>(ent.m_texture.height)});
+                    static_cast<float>(ent.m_texture.height)}, WHITE);
             }
             else
             {

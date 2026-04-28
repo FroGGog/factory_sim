@@ -85,7 +85,7 @@ void MenuState::render() {
 
 State *MenuState::change() {
    if (playingALevel) {
-      return new MainGameState(GridSettings{5000, 5000, 64});
+      return new MainGameState(GridSettings{5000, 5000, 32});
    }
    return nullptr;
 }
