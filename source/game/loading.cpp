@@ -3,7 +3,7 @@
 #include "mngr/sound.hpp"
 #include "util/draw.hpp"
 #include "game/loading.hpp"
-#include "game/gamestate.hpp"
+#include "game/menustate.hpp"
 // Constructors
 
 LoadingState::LoadingState() {
@@ -49,19 +49,16 @@ void LoadingState::fixedUpdate() {
 void LoadingState::render() {
    std::string finalLoadingText = loadingText;
    if (loadPhase != Load::count) {
-      finalLoadingText = loadingText + std::to_string((int)loadPhase) + "/"
-         + std::to_string((int)Load::count);
+      finalLoadingText = loadingText + std::to_string((int)loadPhase) + "/" + std::to_string((int)Load::count);
    }
 
-   Font &font = getFont("roboto-mono");
-   Texture &icon = getTexture("loading");
-
-   drawTextCentered(font, getCenterOffset({0.0f, -175.0f}), finalLoadingText.c_str(), 80);
-   drawTextureCentered(icon, getScreenCenter(), {70.0f, 70.0f}, iconRotation);
+   drawTextCentered(getFont("roboto-mono"), getCenterOffset({0.0f, -175.0f}), finalLoadingText.c_str(), 80, WHITE);
+   drawTextureCentered(getTexture("loading"), getScreenCenter(), {70.0f, 70.0f}, WHITE, iconRotation);
 }
 
 State *LoadingState::change() {
    // add check if games is ready and etc 
    MainGameState* state = new MainGameState(GridSettings{1500, 1500, 32});
    return state;
+   return new MenuState();
 }
