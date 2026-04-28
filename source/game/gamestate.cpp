@@ -34,12 +34,11 @@ void MainGameState::sHandleEvents()
 
             if(CheckCollisionRecs(tile.m_colliderbox, mouseRec))
             {
-                Entity temp;
-                temp.m_colliderbox = tile.m_colliderbox;
+                Entity temp;                
                 temp.m_texture = getTexture("test_large");
                 temp.m_size = Vector2{static_cast<float>(temp.m_texture.width),
                                     static_cast<float>(temp.m_texture.height)};
-                
+                temp.m_colliderbox = Rectangle{static_cast<float>(gridX), static_cast<float>(gridY), temp.m_size.x, temp.m_size.y};
                 m_grid.placeEntity(gridX, gridY, std::move(temp)); 
                 
             }

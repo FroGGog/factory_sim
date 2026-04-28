@@ -2,6 +2,11 @@
 
 size_t Entity::m_global_id = 0;
 
+bool operator==(const Vector2& lhs, const Vector2& rhs)
+{
+    return ((lhs.x == rhs.x) && (lhs.y == rhs.y));
+}
+
 Entity::Entity() : m_id(m_global_id) 
 { 
     m_global_id++;
@@ -96,6 +101,40 @@ void Grid::placeEntity(int x, int y, Entity ent)
     }
 }
 
+void Grid::removeEntity(int x, int y)
+{
+    // Delete all ghost tiles
+    Vector2 ent_pos = Vector2{static_cast<float>(x), static_cast<float>(y)};
+    const Entity* ent = getEntityAt(x, y);
+    for(auto& row : m_tiles)
+    {
+        for(auto& tile : row)
+        {
+            if(!tile.root_pos.has_value())
+            {
+                continue;
+            }
+            if(tile.root_pos.value() == ent_pos)
+            {
+                tile.type = TileType::NONE;
+                tile.root_pos = std::nullopt;
+            }
+        }
+    }
+    // Delete entity
+    for(auto it = m_entities.begin(); it != m_entities.end(); it++)
+    {
+        if(it->m_id == ent->m_id)
+        {
+            m_entities.erase(it);
+            break;
+        }
+    }
+    // remove root tile
+    m_tiles[y][x].entity_id = SIZE_T_MAX;
+    m_tiles[y][x].type = TileType::NONE;
+}
+
 
 bool Grid::canPlaceEntity(int x, int y, int width, int height)
 {
@@ -139,6 +178,20 @@ const Entity* Grid::getEntity(size_t id)
     return nullptr;
 }
 
+// TODO: for big amount of entities maybe slow, rework, also same problem as with getEntity (about pointer)
+const Entity *Grid::getEntityAt(int x, int y)
+{
+    if(m_tiles[y][x].type != TileType::NONE)
+    {
+        for(const auto& entity : m_entities)
+        {
+            if(entity.m_id == m_tiles[y][x].entity_id)
+            {
+                return &entity;
+            }
+        }
+    }
+}
 std::span<Entity> Grid::getEntities()
 {
     std::span<Entity> entities(m_entities);

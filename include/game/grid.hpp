@@ -47,6 +47,7 @@ public:
     void render();
 
     const Entity* getEntity(size_t id);
+    const Entity* getEntityAt(int x, int y);
 
     std::span<Entity> getEntities();
     const std::vector<std::vector<Tile>>& getTiles();
@@ -55,6 +56,7 @@ public:
     size_t getCollumnCount();
 
     void placeEntity(int x, int y, Entity ent);
+    void removeEntity(int x, int y);
 
 private:
 
