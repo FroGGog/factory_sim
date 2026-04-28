@@ -32,18 +32,11 @@ void MainGameState::sHandleEvents()
             
             Rectangle mouseRec = {mousePos.x, mousePos.y, 3.f, 3.f};
 
-            std::cout << "DEBUG: Mouse=[" << mousePos.x << "," << mousePos.y << "] "
-            << "GridIdx=[" << gridX << "," << gridY << "] "
-            << "TileBox=[" << tile.m_colliderbox.x << "," << tile.m_colliderbox.y 
-            << "," << tile.m_colliderbox.width << "," << tile.m_colliderbox.height << "]\n";
-            std::cout.flush(); 
-
-
             if(CheckCollisionRecs(tile.m_colliderbox, mouseRec))
             {
                 Entity temp;
                 temp.m_colliderbox = tile.m_colliderbox;
-                temp.m_texture = getTexture("test_small");
+                temp.m_texture = getTexture("test_large");
                 temp.m_size = Vector2{static_cast<float>(temp.m_texture.width),
                                     static_cast<float>(temp.m_texture.height)};
                 

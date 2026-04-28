@@ -8,9 +8,9 @@
 #include "../include/util/draw.hpp"
 #include "../include/mngr/asset.hpp"
 
-
 enum class TileType {NONE, ROOT, GHOST};
 
+void printTileType(TileType type);
 // for testing
 struct Entity
 {
@@ -62,7 +62,9 @@ private:
     std::vector<std::vector<Tile>> m_tiles;
     std::vector<Entity> m_entities;
 
-    int m_rows, m_collumns;
+    int m_rows, m_collumns, m_tile_size;
 
-    bool canPlaceEntity(int x, int y);
+    bool canPlaceEntity(int x, int y, int width, int height);
+
+    void printNotNoneTiles();
 };
