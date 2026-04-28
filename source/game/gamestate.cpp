@@ -20,17 +20,17 @@ void MainGameState::sHandleEvents()
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
         Vector2 mousePos = GetMousePosition();
+        Vector2 worldPos = GetScreenToWorld2D(mousePos, m_camera);
         
-        int gridX = static_cast<int>(mousePos.x) / m_settings.m_tileSize; 
-        int gridY = static_cast<int>(mousePos.y) / m_settings.m_tileSize;
+        int gridX = static_cast<int>(worldPos.x) / m_settings.m_tileSize; 
+        int gridY = static_cast<int>(worldPos.y) / m_settings.m_tileSize;
         
         if (gridX >= 0 && gridX < m_grid.getCollumnCount() && gridY >= 0 && gridY < m_grid.getRowCount()) 
         {
+            Rectangle mouseRec = {worldPos.x, worldPos.y, 3.f, 3.f};
         
             const auto& tiles = m_grid.getTiles();
             const Tile& tile = tiles[gridY][gridX];    
-            
-            Rectangle mouseRec = {mousePos.x, mousePos.y, 3.f, 3.f};
 
             if(CheckCollisionRecs(tile.m_colliderbox, mouseRec))
             {
@@ -43,6 +43,10 @@ void MainGameState::sHandleEvents()
                 
             }
       }
+    }
+    if(IsKeyPressed(KEY_BACKSPACE))
+    {
+        m_grid.removeLastAddedEntity(); 
     }
 
     if(IsKeyDown(KEY_D))

@@ -46,8 +46,8 @@ public:
 
     void render();
 
-    const Entity* getEntity(size_t id);
-    const Entity* getEntityAt(int x, int y);
+    Entity* getEntity(size_t id);
+    size_t getEntityIdAt(int x, int y);
 
     std::span<Entity> getEntities();
     const std::vector<std::vector<Tile>>& getTiles();
@@ -57,6 +57,7 @@ public:
 
     void placeEntity(int x, int y, Entity ent);
     void removeEntity(int x, int y);
+    void removeLastAddedEntity();
 
 private:
 
@@ -66,4 +67,6 @@ private:
     int m_rows, m_collumns, m_tile_size;
 
     bool canPlaceEntity(int x, int y, int width, int height);
+
+    void resetTileArea(Vector2 ent_pos);
 };

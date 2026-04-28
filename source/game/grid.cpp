@@ -64,7 +64,6 @@ void Grid::render()
 }
 
 
-
 void Grid::placeEntity(int x, int y, Entity ent)
 {
     if(canPlaceEntity(x, y, ent.m_texture.width, ent.m_texture.height))
@@ -89,7 +88,8 @@ void Grid::placeEntity(int x, int y, Entity ent)
                     if(m_tiles[i][j].type == TileType::NONE)
                     {
                         m_tiles[i][j].type = TileType::GHOST;
-                        m_tiles[i][j].root_pos = Vector2{static_cast<float>(x), static_cast<float>(y)};                        
+                        m_tiles[i][j].root_pos = Vector2{static_cast<float>(x), static_cast<float>(y)};   
+                                             
                     }   
                 }
             }
@@ -101,30 +101,53 @@ void Grid::placeEntity(int x, int y, Entity ent)
     }
 }
 
-void Grid::removeEntity(int x, int y)
+void Grid::resetTileArea(Vector2 ent_pos)
 {
-    // Delete all ghost tiles
-    Vector2 ent_pos = Vector2{static_cast<float>(x), static_cast<float>(y)};
-    const Entity* ent = getEntityAt(x, y);
+    // root 
+    m_tiles[ent_pos.y][ent_pos.x].type = TileType::NONE;
+    // ghosts
     for(auto& row : m_tiles)
     {
         for(auto& tile : row)
         {
-            if(!tile.root_pos.has_value())
-            {
-                continue;
-            }
-            if(tile.root_pos.value() == ent_pos)
+            if(tile.root_pos.has_value() && tile.root_pos.value() == ent_pos)
             {
                 tile.type = TileType::NONE;
                 tile.root_pos = std::nullopt;
+                tile.entity_id = SIZE_T_MAX;
             }
         }
     }
+}
+
+void Grid::removeLastAddedEntity()
+{
+    if(m_entities.empty())
+    {
+        return;
+    }
+    resetTileArea(Vector2{m_entities.back().m_colliderbox.x, m_entities.back().m_colliderbox.y});
+    m_entities.pop_back();
+}
+
+void Grid::removeEntity(int x, int y)
+{
+    if(x < 0 || x >= m_collumns || y < 0 || y >= m_rows)
+    {
+        return;
+    }
+    size_t entity_id = m_tiles[y][x].entity_id;
+    if(entity_id == SIZE_T_MAX || entity_id >= m_entities.size())
+    {
+        return;
+    }
+    // Delete all ghost tiles
+    Vector2 ent_pos = Vector2{static_cast<float>(x), static_cast<float>(y)};    
+    resetTileArea(ent_pos);
     // Delete entity
     for(auto it = m_entities.begin(); it != m_entities.end(); it++)
     {
-        if(it->m_id == ent->m_id)
+        if(it->m_id == entity_id)
         {
             m_entities.erase(it);
             break;
@@ -165,32 +188,25 @@ bool Grid::canPlaceEntity(int x, int y, int width, int height)
     return true;
 }
 
-const Entity* Grid::getEntity(size_t id)
+Entity* Grid::getEntity(size_t id)
 {
     // TODO: if vec realoc memory pointer will point on trash, change it
-    for(const auto& entity : m_entities)
+    for(auto& entity : m_entities)
     {
         if(entity.m_id == id)
-        {
             return &entity;
-        }
     }
     return nullptr;
 }
 
-// TODO: for big amount of entities maybe slow, rework, also same problem as with getEntity (about pointer)
-const Entity *Grid::getEntityAt(int x, int y)
+// TODO: for big amount of entities maybe slow, rework
+size_t Grid::getEntityIdAt(int x, int y)
 {
-    if(m_tiles[y][x].type != TileType::NONE)
+    if(x >= 0 && x < m_collumns && y >= 0 && y < m_rows)
     {
-        for(const auto& entity : m_entities)
-        {
-            if(entity.m_id == m_tiles[y][x].entity_id)
-            {
-                return &entity;
-            }
-        }
+        return m_tiles[y][x].entity_id;
     }
+    return SIZE_T_MAX;
 }
 std::span<Entity> Grid::getEntities()
 {
