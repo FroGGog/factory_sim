@@ -103,9 +103,18 @@ void Grid::placeEntity(int x, int y, Entity ent)
 
 void Grid::resetTileArea(Vector2 ent_pos)
 {
-    // root 
-    m_tiles[ent_pos.y][ent_pos.x].type = TileType::NONE;
-    // ghosts
+    
+    int rootX = static_cast<int>(ent_pos.x);
+    int rootY = static_cast<int>(ent_pos.y);
+
+    if(rootX >= 0 && rootX < m_collumns && rootY >= 0 && rootY < m_rows)
+    {
+    
+        m_tiles[rootY][rootX].type = TileType::NONE;
+        m_tiles[rootY][rootX].entity_id = SIZE_T_MAX;
+        m_tiles[rootY][rootX].root_pos = std::nullopt;
+    }
+    
     for(auto& row : m_tiles)
     {
         for(auto& tile : row)
@@ -123,10 +132,19 @@ void Grid::resetTileArea(Vector2 ent_pos)
 void Grid::removeLastAddedEntity()
 {
     if(m_entities.empty())
-    {
         return;
+    
+    const Entity& last = m_entities.back();
+    
+    int gridX = static_cast<int>(last.m_colliderbox.x) / m_tile_size;
+    int gridY = static_cast<int>(last.m_colliderbox.y) / m_tile_size;
+    
+    if(gridX >= 0 && gridX < m_collumns && gridY >= 0 && gridY < m_rows)
+    {
+        Vector2 rootPos = Vector2{static_cast<float>(gridX), static_cast<float>(gridY)};
+        resetTileArea(rootPos);
     }
-    resetTileArea(Vector2{m_entities.back().m_colliderbox.x, m_entities.back().m_colliderbox.y});
+    
     m_entities.pop_back();
 }
 

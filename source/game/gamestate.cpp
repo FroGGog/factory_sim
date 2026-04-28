@@ -32,17 +32,28 @@ void MainGameState::sHandleEvents()
             const auto& tiles = m_grid.getTiles();
             const Tile& tile = tiles[gridY][gridX];    
 
+            // check if collide with other entity than skip
+            for(const auto& entity : m_grid.getEntities())
+                {
+                    if(CheckCollisionRecs(entity.m_colliderbox, mouseRec))
+                    {
+                        std::cout << "[INFO] Can't place tile here - occupied \n";
+                        return;
+                    }
+                }
+            // after check if wants to place some ent
             if(CheckCollisionRecs(tile.m_colliderbox, mouseRec))
             {
                 Entity temp;                
                 temp.m_texture = getTexture("test_large");
                 temp.m_size = Vector2{static_cast<float>(temp.m_texture.width),
                                     static_cast<float>(temp.m_texture.height)};
-                temp.m_colliderbox = Rectangle{static_cast<float>(gridX), static_cast<float>(gridY), temp.m_size.x, temp.m_size.y};
+                float pixelX = gridX * m_settings.m_tileSize;
+                float pixelY = gridY * m_settings.m_tileSize;
+                temp.m_colliderbox = Rectangle{pixelX, pixelY, temp.m_size.x, temp.m_size.y};
                 m_grid.placeEntity(gridX, gridY, std::move(temp)); 
-                
             }
-      }
+        }
     }
     if(IsKeyPressed(KEY_BACKSPACE))
     {
