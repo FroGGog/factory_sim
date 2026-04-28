@@ -13,9 +13,6 @@ enum class TileType {NONE, ROOT, GHOST};
 
 struct Entity
 {
-    Entity();
-
-    static size_t m_global_id;
     size_t m_id;
     Vector2 m_size;
     Texture m_texture;
@@ -27,7 +24,7 @@ struct Tile
 {
     TileType type = TileType::NONE;
     size_t entity_id;
-    std::optional<Vector2> root_pos;
+    Vector2 root_pos;
     Rectangle m_colliderbox;
 };
 
@@ -50,6 +47,7 @@ public:
     size_t getEntityIdAt(int x, int y);
 
     std::span<Entity> getEntities();
+    std::vector<size_t>& getAvailableEntitySlots();
     const std::vector<std::vector<Tile>>& getTiles();
 
     size_t getRowCount();
@@ -63,6 +61,7 @@ private:
 
     std::vector<std::vector<Tile>> m_tiles;
     std::vector<Entity> m_entities;
+    std::vector<size_t> m_available_entity_slots;
 
     int m_rows, m_collumns, m_tile_size;
 

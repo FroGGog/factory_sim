@@ -1,15 +1,8 @@
 #include "game/grid.hpp"
 
-size_t Entity::m_global_id = 0;
-
 bool operator==(const Vector2& lhs, const Vector2& rhs)
 {
     return ((lhs.x == rhs.x) && (lhs.y == rhs.y));
-}
-
-Entity::Entity() : m_id(m_global_id) 
-{ 
-    m_global_id++;
 }
 
 // Grid class
@@ -37,6 +30,8 @@ Grid::Grid(const GridSettings& settings)
             m_tiles[row][col] = temp;
         }
     }
+
+    m_entities.push_back(Entity{}); // reserve ID 0 as null
 }
 
 void Grid::render()
@@ -51,6 +46,7 @@ void Grid::render()
                 Vector2 pos = { tile.m_colliderbox.x, tile.m_colliderbox.y };
                 drawTexture(ent.m_texture, Vector2{pos}, Vector2{static_cast<float>(ent.m_texture.width),
                     static_cast<float>(ent.m_texture.height)}, WHITE);
+                DrawText(TextFormat("ID%lu", tile.entity_id), tile.m_colliderbox.x, tile.m_colliderbox.y, 15, RED);
             }
             else
             {
@@ -95,9 +91,17 @@ void Grid::placeEntity(int x, int y, Entity ent)
             }
         }
 
-        m_entities.push_back(std::move(ent));
-        m_tiles[y][x].entity_id = m_entities.back().m_id;
-
+        if (!m_available_entity_slots.empty()) {
+            size_t index = m_available_entity_slots.back();
+            
+            m_entities[index] = ent;
+            m_tiles[y][x].entity_id = index;
+            m_available_entity_slots.pop_back();
+        }
+        else {
+            m_tiles[y][x].entity_id = m_entities.size();
+            m_entities.push_back(ent);
+        }
     }
 }
 
@@ -111,19 +115,17 @@ void Grid::resetTileArea(Vector2 ent_pos)
     {
     
         m_tiles[rootY][rootX].type = TileType::NONE;
-        m_tiles[rootY][rootX].entity_id = SIZE_T_MAX;
-        m_tiles[rootY][rootX].root_pos = std::nullopt;
+        m_tiles[rootY][rootX].entity_id = 0;
     }
     
     for(auto& row : m_tiles)
     {
         for(auto& tile : row)
         {
-            if(tile.root_pos.has_value() && tile.root_pos.value() == ent_pos)
+            if(tile.type == TileType::GHOST && tile.root_pos == ent_pos)
             {
                 tile.type = TileType::NONE;
-                tile.root_pos = std::nullopt;
-                tile.entity_id = SIZE_T_MAX;
+                tile.entity_id = 0;
             }
         }
     }
@@ -155,24 +157,19 @@ void Grid::removeEntity(int x, int y)
         return;
     }
     size_t entity_id = m_tiles[y][x].entity_id;
-    if(entity_id == SIZE_T_MAX || entity_id >= m_entities.size())
+    if(entity_id == 0 || entity_id >= m_entities.size())
     {
         return;
     }
     // Delete all ghost tiles
     Vector2 ent_pos = Vector2{static_cast<float>(x), static_cast<float>(y)};    
     resetTileArea(ent_pos);
-    // Delete entity
-    for(auto it = m_entities.begin(); it != m_entities.end(); it++)
-    {
-        if(it->m_id == entity_id)
-        {
-            m_entities.erase(it);
-            break;
-        }
-    }
+
+    m_entities[entity_id].m_id = 0;
+    m_available_entity_slots.push_back(entity_id);
+
     // remove root tile
-    m_tiles[y][x].entity_id = SIZE_T_MAX;
+    m_tiles[y][x].entity_id = 0;
     m_tiles[y][x].type = TileType::NONE;
 }
 
@@ -208,28 +205,30 @@ bool Grid::canPlaceEntity(int x, int y, int width, int height)
 
 Entity* Grid::getEntity(size_t id)
 {
-    // TODO: if vec realoc memory pointer will point on trash, change it
-    for(auto& entity : m_entities)
-    {
-        if(entity.m_id == id)
-            return &entity;
+    if (id >= m_entities.size() || id == 0) {
+        return nullptr;
     }
-    return nullptr;
+    return &m_entities[id];
 }
 
 // TODO: for big amount of entities maybe slow, rework
+// NOTE: compiler will optimize this accordingly, there's no need for that
 size_t Grid::getEntityIdAt(int x, int y)
 {
     if(x >= 0 && x < m_collumns && y >= 0 && y < m_rows)
     {
         return m_tiles[y][x].entity_id;
     }
-    return SIZE_T_MAX;
+    return 0;
 }
 std::span<Entity> Grid::getEntities()
 {
     std::span<Entity> entities(m_entities);
     return entities;
+}
+
+std::vector<size_t>& Grid::getAvailableEntitySlots() {
+    return m_available_entity_slots;
 }
 
 const std::vector<std::vector<Tile>>& Grid::getTiles()

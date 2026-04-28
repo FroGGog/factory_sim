@@ -35,7 +35,7 @@ void MainGameState::sHandleEvents()
             // check if collide with other entity than skip
             for(const auto& entity : m_grid.getEntities())
                 {
-                    if(CheckCollisionRecs(entity.m_colliderbox, mouseRec))
+                    if(entity.m_id != 0 && CheckCollisionRecs(entity.m_colliderbox, mouseRec))
                     {
                         std::cout << "[INFO] Can't place tile here - occupied \n";
                         return;
@@ -55,6 +55,17 @@ void MainGameState::sHandleEvents()
             }
         }
     }
+
+    // quick and dirty, we won't be needing this for long anyway
+    else if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+        Vector2 mousePos = GetMousePosition();
+        Vector2 worldPos = GetScreenToWorld2D(mousePos, m_camera);
+
+        int gridX = int(worldPos.x / m_settings.m_tileSize);
+        int gridY = int(worldPos.y / m_settings.m_tileSize);
+        m_grid.removeEntity(gridX, gridY);
+    }
+
     if(IsKeyPressed(KEY_BACKSPACE))
     {
         m_grid.removeLastAddedEntity(); 
@@ -89,6 +100,8 @@ void MainGameState::render()
     BeginMode2D(m_camera);
     m_grid.render();
     EndMode2D();
+    DrawText(TextFormat("Empty Slots: %lu\nEntities: %lu", m_grid.getAvailableEntitySlots().size(),
+        m_grid.getEntities().size()), 5, 5, 40, RED);
 }
 
 State *MainGameState::change()
