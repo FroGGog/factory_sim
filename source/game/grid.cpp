@@ -7,37 +7,6 @@ Entity::Entity() : m_id(m_global_id)
     m_global_id++;
 }
 
-void printTileType(TileType type)
-{
-    switch (type)
-    {
-    case TileType::NONE:
-        break;
-    case TileType::GHOST:
-        std::cout << "Tile type is GHOST\n";
-        break;
-    case TileType::ROOT:
-        std::cout << "Tile type is ROOT\n";
-        break;
-    default:
-        break;
-    }
-}
-
-void Grid::printNotNoneTiles()
-{
-    for(size_t i = 0; i < m_rows; i++)
-    {
-        for(size_t j = 0; j < m_collumns; j++)
-        {
-            if(m_tiles[i][j].type == TileType::GHOST)
-            {
-                std::cout << "Tile at: " << i << ' ' << j << '\n';
-            }
-        }
-    }
-}
-
 // Grid class
 Grid::Grid(const GridSettings& settings)
 {   

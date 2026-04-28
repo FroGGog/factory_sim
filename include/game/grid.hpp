@@ -10,8 +10,7 @@
 
 enum class TileType {NONE, ROOT, GHOST};
 
-void printTileType(TileType type);
-// for testing
+
 struct Entity
 {
     Entity();
@@ -65,6 +64,4 @@ private:
     int m_rows, m_collumns, m_tile_size;
 
     bool canPlaceEntity(int x, int y, int width, int height);
-
-    void printNotNoneTiles();
 };
