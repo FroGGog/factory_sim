@@ -8,7 +8,6 @@ Entity::Entity() : m_id(m_global_id)
 }
 
 // Grid class
-
 Grid::Grid(const GridSettings& settings)
 {   
     // x = 1500 y = 150
@@ -84,6 +83,7 @@ bool Grid::canPlaceEntity(int x, int y)
 
 const Entity* Grid::getEntity(size_t id)
 {
+    // TODO: if vec realoc memory pointer will point on trash, change it
     for(const auto& entity : m_entities)
     {
         if(entity.m_id == id)

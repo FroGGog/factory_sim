@@ -43,7 +43,7 @@ void MainGameState::sHandleEvents()
             {
                 Entity temp;
                 temp.m_colliderbox = tile.m_colliderbox;
-                temp.m_texture = getTexture("test_large");
+                temp.m_texture = getTexture("test_small");
                 temp.m_size = Vector2{static_cast<float>(temp.m_texture.width),
                                     static_cast<float>(temp.m_texture.height)};
                 
